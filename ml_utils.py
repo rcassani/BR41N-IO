@@ -1,34 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Oct 07 14:38:02 2017
-
-@author: joaom
-"""
-
-import numpy as np
-from sklearn.neural_network import MLPClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import tree
-from sklearn.svm import SVC
-
-def normalize(data):
-	"""
-	features whitening
-	"""
-	
-	mean_ = np.mean(data, axis=0)
-	std_ = np.std(data, axis=0)# -*- coding: utf-8 -*-
-"""
-Created on Sat Oct 07 14:38:02 2017
-
-@author: joaom
-"""
-
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn import tree
 from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
 
 def normalize(data):
 	"""
@@ -128,6 +103,8 @@ def train_classifiers(x,y):
 	models.append(svc_rbf3)
 	models.append(svc_lin3)
 
+	# Ensemble of all models
+
 	ensemble_model = VotingClassifier(estimators=models_list)
 	ensemble_model.fit(x,y)
 
@@ -150,87 +127,20 @@ def predict_from_list(x, models_list):
 
 	return predictions
 
-
-def prepare_data(class_0, class_1):
+def test_from_list(x, y, models_list):
 	"""
-	1-Merge, shuffle and normalize features;
-	2-Create labels arrays;
-	
+	Instantiate and train classification models
+
 	Inputs:
-		Class0 and Class1 features matrices;
+		x features matrix;
 	Outputs:
-		Shuffled and normalized data matrix - [#data_points, #features]
-		Labels matrix - [#data_points]
+		Predictions
 	"""
-	
-	n_0 = class_0.shape[0]
-	n_1 = class_1.shape[0]
-	n = n_0 + n_1
-	
-	y_0 = np.zeros(n_0)
-	y_1 = np.zeros(n_1)
-	
-	y = np.hstack([y_0, y_1])
-	x_class01 = np.vstack(class_0, class_1)
-	
-	indexes = np.random.permutation(n)
-	
-	x = normalize(x_class01)
-	
-	return x[indexes],y[indexes]
 
-def train_classifiers(x,y):
+	accuracies = []
 
-	# Intantiate and train classification models
+	for model in models_lisr:
+		y_pred = model.predic(x)
+		accuracies.append(accuracy_score(y, y_pred))
 
-	models = []
-
-	#Trees
-	
-	dtree = tree.DecisionTreeClassifier()
-	dtree.fit(x, y)
-	models.append(dtree)
-	
-	forest = RandomForestClassifier(n_estimators=10)
-	forest.fit(x, y)
-	models.append(forest)
-	
-	#MLP
-	
-	mlp = MLPClassifier(solver='adam', activation='relu', learning_rate_init=1e-3, alpha=1e-5, max_iter=1000, hidden_layer_sizes=(5, 3), random_state=1)
-	mlp.fit(x, y)
-	models.append(mlp)
-	
-	#SVMs
-	
-	svc_rbf1 = SVC(kernel='rbf', C=0.1, gamma=0.1)
-	svc_lin1 = SVC(kernel='linear', C=0.1)
-	svc_poly1 = SVC(kernel='poly', C=0.1, degree=3)
-	svc_rbf1.fit(x, y)
-	svc_lin1.fit(x, y)
-	svc_poly1.fit(x, y)
-	models.append(svc_poly1)
-	models.append(svc_rbf11)
-	models.append(svc_lin1)
-	
-	svc_rbf2 = SVC(kernel='rbf', C=10.0, gamma=0.1)
-	svc_lin2 = SVC(kernel='linear', C=10.0)
-	svc_poly2 = SVC(kernel='poly', C=10.0, degree=3)
-	svc_rbf2.fit(x, y)
-	svc_lin2.fit(x, y)
-	svc_poly2.fit(x, y)
-	models.append(svc_poly2)
-	models.append(svc_rbf12)
-	models.append(svc_lin2)
-	
-	svc_rbf3 = SVC(kernel='rbf', C=100.0, gamma=0.1)
-	svc_lin3 = SVC(kernel='linear', C=100.0)
-	svc_poly3 = SVC(kernel='poly', C=100.0, degree=3)
-	svc_rbf3.fit(x, y)
-	svc_lin3.fit(x, y)
-	svc_poly3.fit(x, y)
-	models.append(svc_poly3)
-	models.append(svc_rbf13)
-	models.append(svc_lin3)
-
-	return(models)
+	return predictions
