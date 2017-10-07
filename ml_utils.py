@@ -150,4 +150,4 @@ def test_from_list(x, y, models_list):
 		y_pred = model.predic(x)
 		accuracies.append(accuracy_score(y, y_pred))
 
-	return predictions
+	return accuracies
