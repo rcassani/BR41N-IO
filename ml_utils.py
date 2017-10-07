@@ -3,6 +3,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn import tree
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 def normalize(data):
@@ -55,7 +56,7 @@ def train_classifiers(x,y):
 	"""
 	models = []
 
-	#Trees
+	# Trees
 	
 	dtree = tree.DecisionTreeClassifier()
 	dtree.fit(x, y)
@@ -65,13 +66,19 @@ def train_classifiers(x,y):
 	forest.fit(x, y)
 	models.append(forest)
 	
-	#MLP
+	# Logistic Regression
+
+	log_reg = LogisticRegression()
+	log_reg.fit(x,y)
+	models.append(log_reg)
+
+	# MLP
 	
 	mlp = MLPClassifier(solver='adam', activation='relu', learning_rate_init=1e-3, alpha=1e-5, max_iter=1000, hidden_layer_sizes=(5, 3), random_state=1)
 	mlp.fit(x, y)
 	models.append(mlp)
 	
-	#SVMs
+	# SVMs
 	
 	svc_rbf1 = SVC(kernel='rbf', C=0.1, gamma=0.1)
 	svc_lin1 = SVC(kernel='linear', C=0.1)
