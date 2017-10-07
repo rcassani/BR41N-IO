@@ -122,9 +122,9 @@ def predict_from_list(x, models_list):
 	Instantiate and train classification models
 
 	Inputs:
-		x features matrix;
+		list of models
 	Outputs:
-		Predictions
+		list of predictions
 	"""
 
 	predictions = []
@@ -139,9 +139,9 @@ def test_from_list(x, y, models_list):
 	Instantiate and train classification models
 
 	Inputs:
-		x features matrix;
+		list of models
 	Outputs:
-		Predictions
+		list of accuracies
 	"""
 
 	accuracies = []
