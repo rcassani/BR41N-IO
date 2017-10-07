@@ -24,10 +24,9 @@ from blablabla import blablabla
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='SMC Brain Hackathon')
-	parser.add_argument('--training-secs', type = float, default = 20.0, help = 'Duration of each training iteration in seconds')
+	parser.add_argument('--training-secs', type = float, default = 5.0, help = 'Duration of each training iteration in seconds')
 	parser.add_argument('--win-test-secs', type = float, default = 1.0, help = 'Length of the test window in seconds')
 	parser.add_argument('--overlap-secs', type = float, default = 0.7, help = 'Overlap between two consecutive test windows')
-	parser.add_argument('--eeg-buffer-secs', type = float, default = 30, help = 'Size of the EEG data buffer (duration of testing section)')
 	parser.add_argument('--max-feedback-loops', type = int, default = 10, help = 'Maximum number of training loops (feedback loops)')
 	parser.add_argument('--training-accuracy-threshold', type = float, default = 0.7, help = 'Minimum accuracy for getting out of the training loop')
 	parser.add_argument('--max-trainset-size', type = float, default = 0.7, help = 'Minimum accuracy for getting out of the training loop')
@@ -92,7 +91,7 @@ if __name__ == "__main__":
 
 		try:
 			total_features = np.vstack([total_features, data_points])
-			total_labels = np.vstack([total_labels, labels])
+			total_labels = np.hstack([total_labels, labels])
 		except NameError:
 			total_features = data_points
 			total_labels = labels
@@ -132,13 +131,7 @@ if __name__ == "__main__":
 
 	# Initialize the buffers for storing raw EEG and decisions
 
-	eeg_buffer = np.zeros((params['sampling frequency']*args.eeg_buffer_secs, len(params['data format']))) 
-	decision_buffer = np.zeros((30, 1))
-
 	mules_client.flushdata()  # Flushes old data from MuLES
-
-	#BCIw.plot_classifier_training(feat_matrix0, feat_matrix1) # This will plot the decision boundary of a 2-feature SVM
-
 
 	# Start pulling data and classifying in real-time
 
