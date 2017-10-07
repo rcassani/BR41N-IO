@@ -58,7 +58,7 @@ if __name__ == "__main__":
 	loops_done = 0
 	training_acc = 0.0
 
-	while ((loops_done < args.max_feedback_loops) && (training_acc < args.training_accuracty_threshold)):
+	while ((loops_done < args.max_feedback_loops) & (training_acc < args.training_accuracty_threshold)):
 
 		# Record data for mental activity 0
 		BCIw.beep()
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 			myo_client.vibrate('short')
 
 
-		if (training_acc > 0.4 && training_acc < args.training_accuracty_threshold):
+		if (training_acc > 0.4 & training_acc < args.training_accuracty_threshold):
 			
 			# Send vibration 
 			myo_client.vibrate('short') 
