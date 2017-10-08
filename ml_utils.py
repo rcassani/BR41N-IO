@@ -14,7 +14,7 @@ def normalize(data):
 	mean_ = np.mean(data, axis=0)
 	std_ = np.std(data, axis=0)
 
-	return (data-mean_)/std_
+	return (data-mean_)/(std_+1e-15), mean_, std_
 
 def prepare_data(class_0, class_1):
 	"""
@@ -26,6 +26,7 @@ def prepare_data(class_0, class_1):
 	Outputs:
 		Shuffled and normalized data matrix - [#data_points, #features]
 		Labels matrix - [#data_points]
+      data statistics
 	"""
 	
 	n_0 = class_0.shape[0]
@@ -40,9 +41,9 @@ def prepare_data(class_0, class_1):
 	
 	indexes = np.random.permutation(n)
 	
-	x = normalize(x_class01)
+	x, mu, std = normalize(x_class01)
 	
-	return x[indexes],y[indexes]
+	return x[indexes],y[indexes],mu, std
 
 def train_classifiers(x,y):
 	"""
