@@ -9,6 +9,13 @@ a classifier is an algorithm that, provided some data, learns to recognize
 patterns, and can then classify similar unseen information.
 """
 
+'''
+TO DO:
+1- Decision
+2- Check data acquisition
+
+'''
+
 
 import mules
 import numpy as np
@@ -18,7 +25,8 @@ import argparse
 from clientmyo import ClientMyo
 import time
 from ml_utils import prepare_data, train_classifiers, predict_from_list, test_from_list, normalize
-from blablabla import blablabla
+from CSP import CSP_train, CSP_test
+from calc_entropy import calc_entropy
 
 
 if __name__ == "__main__":
@@ -31,6 +39,8 @@ if __name__ == "__main__":
 	parser.add_argument('--training-accuracy-threshold', type = float, default = 0.7, help = 'Minimum accuracy for getting out of the training loop')
 	parser.add_argument('--max-trainset-size', type = float, default = 0.7, help = 'Minimum accuracy for getting out of the training loop')
 	parser.add_argument('--csp', action = store_true, default = False, help = 'Enables CSP features')
+	parser.add_argument('--entropy', action = store_true, default = False, help = 'Enables entropy features')
+	parser.add_argument('--all-features', action = store_true, default = False, help = 'Enables all features')
 	args = parser.parse_args()
 
 	# MuLES connection paramters
@@ -77,21 +87,24 @@ if __name__ == "__main__":
 		# Compute features
 
 		if (args.csp):
-	
-			feat_matrix0 = blablabla
-			feat_matrix1 = blablabla
-
+			feat_matrix0, feat_matrix1, W_csp = CSP_train(eeg_epochs0, eeg_epochs1)
 
 		else:
-
 			feat_matrix0 = BCIw.compute_feature_matrix(eeg_epochs0, params['sampling frequency'])
 			feat_matrix1 = BCIw.compute_feature_matrix(eeg_epochs1, params['sampling frequency'])
+
+		if (args.entropy):
+			entropy0 = calc_entropy(eeg_epochs0) 
+			entropy1 = calc_entropy(eeg_epochs1)
+			feat_matrix0 = np.hstack([feat_matrix0, entropy0])
+			feat_matrix1 = np.hstack([feat_matrix1, entropy1])
 
 		data_points, labels = prepare_data(feat_matrix0, feat_matrix1)
 
 		try:
 			total_features = np.vstack([total_features, data_points])
 			total_labels = np.hstack([total_labels, labels])
+		
 		except NameError:
 			total_features = data_points
 			total_labels = labels
@@ -151,10 +164,14 @@ if __name__ == "__main__":
 			# Compute features on "eeg_data"
 
 			if (args.csp):
-				feat_vector = blablabla
+				feat_vector = CSP_test(eeg_data, W_csp)
 			
 			else:
 				feat_vector = BCIw.compute_feature_vector(eeg_data, params['sampling frequency'])
+
+			if (args.entropy):
+				entropy = calc_entropy(eeg_data)
+				feat_vector = np.hstack([feat_vector, entropy])
 
 			y_hat = model.predict(normalize(feat_vector.reshape(1, -1)))
 
