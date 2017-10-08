@@ -22,7 +22,8 @@ def calc_entropy(time_series):
         z=np.concatenate((x, y))
     fin.append(z)
     
-	fin = np.asarray(fin)
+    fin = np.asarray(fin)
+
 
     return fin
 
