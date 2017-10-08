@@ -24,6 +24,7 @@ def calc_entropy(time_series):
     
     fin = np.asarray(fin)
 
+
     return fin
 
 
