@@ -14,7 +14,7 @@ def normalize(data):
 	mean_ = np.mean(data, axis=0)
 	std_ = np.std(data, axis=0)
 
-	return (data-mean)/std
+	return (data-mean_)/std_
 
 def prepare_data(class_0, class_1):
 	"""
@@ -33,7 +33,7 @@ def prepare_data(class_0, class_1):
 	n = n_0 + n_1
 	
 	y_0 = np.zeros(n_0)
-	y_1 = np.zeros(n_1)
+	y_1 = np.ones(n_1)
 	
 	y = np.hstack([y_0, y_1])
 	x_class01 = np.vstack(class_0, class_1)
@@ -129,8 +129,8 @@ def predict_from_list(x, models_list):
 
 	predictions = []
 
-	for model in models_lisr:
-		predictions.append(model.predic(x))
+	for model in models_list:
+		predictions.append(model.predict(x))
 
 	return predictions
 
@@ -146,8 +146,8 @@ def test_from_list(x, y, models_list):
 
 	accuracies = []
 
-	for model in models_lisr:
-		y_pred = model.predic(x)
+	for model in models_list:
+		y_pred = model.predict(x)
 		accuracies.append(accuracy_score(y, y_pred))
 
 	return accuracies
