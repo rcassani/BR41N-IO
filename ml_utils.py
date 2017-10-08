@@ -36,7 +36,7 @@ def prepare_data(class_0, class_1):
 	y_1 = np.ones(n_1)
 	
 	y = np.hstack([y_0, y_1])
-	x_class01 = np.vstack(class_0, class_1)
+	x_class01 = np.vstack([class_0, class_1])
 	
 	indexes = np.random.permutation(n)
 	
@@ -60,23 +60,23 @@ def train_classifiers(x,y):
 	
 	dtree = tree.DecisionTreeClassifier()
 	dtree.fit(x, y)
-	models.append(dtree)
+	models.append(('tree',dtree))
 	
 	forest = RandomForestClassifier(n_estimators=10)
 	forest.fit(x, y)
-	models.append(forest)
+	models.append(('forest',forest))
 	
 	# Logistic Regression
 
 	log_reg = LogisticRegression()
 	log_reg.fit(x,y)
-	models.append(log_reg)
+	models.append(('log_reg',log_reg))
 
 	# MLP
 	
 	mlp = MLPClassifier(solver='adam', activation='relu', learning_rate_init=1e-3, alpha=1e-5, max_iter=1000, hidden_layer_sizes=(5, 3), random_state=1)
 	mlp.fit(x, y)
-	models.append(mlp)
+	models.append(('mlp',mlp))
 	
 	# SVMs
 	
@@ -86,9 +86,9 @@ def train_classifiers(x,y):
 	svc_rbf1.fit(x, y)
 	svc_lin1.fit(x, y)
 	svc_poly1.fit(x, y)
-	models.append(svc_poly1)
-	models.append(svc_rbf1)
-	models.append(svc_lin1)
+	models.append(('svc_poly1',svc_poly1))
+	models.append(('svc_rbf1',svc_rbf1))
+	models.append(('svc_lin1',svc_lin1))
 	
 	svc_rbf2 = SVC(kernel='rbf', C=10.0, gamma=0.1)
 	svc_lin2 = SVC(kernel='linear', C=10.0)
@@ -96,9 +96,9 @@ def train_classifiers(x,y):
 	svc_rbf2.fit(x, y)
 	svc_lin2.fit(x, y)
 	svc_poly2.fit(x, y)
-	models.append(svc_poly2)
-	models.append(svc_rbf2)
-	models.append(svc_lin2)
+	models.append(('svc_poly2',svc_poly2))
+	models.append(('svc_rbf2',svc_rbf2))
+	models.append(('svc_lin2',svc_lin2))
 	
 	svc_rbf3 = SVC(kernel='rbf', C=100.0, gamma=0.1)
 	svc_lin3 = SVC(kernel='linear', C=100.0)
@@ -106,13 +106,13 @@ def train_classifiers(x,y):
 	svc_rbf3.fit(x, y)
 	svc_lin3.fit(x, y)
 	svc_poly3.fit(x, y)
-	models.append(svc_poly3)
-	models.append(svc_rbf3)
-	models.append(svc_lin3)
+	models.append(('svc_poly3',svc_poly3))
+	models.append(('svc_rbf3',svc_rbf3))
+	models.append(('svc_lin3',svc_lin3))
 
 	# Ensemble of all models
 
-	ensemble_model = VotingClassifier(estimators=models_list)
+	ensemble_model = VotingClassifier(estimators=models)
 	ensemble_model.fit(x,y)
 
 	return models, ensemble_model

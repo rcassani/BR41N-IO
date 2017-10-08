@@ -256,7 +256,7 @@ class MulesClient():
 
         n_columns = len(self.params['data format'])
         n_bytes = len(package)
-        n_samples = (n_bytes/size_element) / n_columns
+        n_samples = int( (n_bytes/size_element) / n_columns)
         ####mesData = np.uint8(mesData) # Convert from binary to integers (not necessary pyton)
         if self.python2:
             bytes_per_element = np.flipud(np.reshape(list(bytearray(package)), [size_element,-1],order='F'))
@@ -278,6 +278,7 @@ class MulesClient():
             elements = struct.unpack(data_format_tags,package_correct_order_char)
         else:
             elements = struct.unpack(data_format_tags, bytearray(package_correct_order_char,'ISO-8859-1'))
+        
         # Elements are cast in their corresponding representation
         data = np.reshape(np.array(elements),[n_samples,n_columns],order='C')
         # Elements are reshap into data [n_samples, n_columns]

@@ -68,7 +68,7 @@ if __name__ == "__main__":
     loops_done = 0
     training_acc = 0.0
 
-    while ((loops_done < args.max_feedback_loops) & (training_acc < args.training_accuracty_threshold)):
+    while ((loops_done < args.max_feedback_loops) and (training_acc < args.training_accuracy_threshold)):
 
         # Record data for mental activity 0
         BCIw.beep()
@@ -79,10 +79,10 @@ if __name__ == "__main__":
         eeg_data1 = mules_client.getdata(args.training_secs)    
 
         # Divide data into epochs
-        eeg_epochs0 = BCIw.epoching(eeg_data0, args.win_test_secs * params['sampling frequency'], 
-                                            args.overlap_secs * params['sampling frequency'])
-        eeg_epochs1 = BCIw.epoching(eeg_data1, args.win_test_secs * params['sampling frequency'],    
-                                            args.overlap_secs * params['sampling frequency'])
+        eeg_epochs0 = BCIw.epoching(eeg_data0, round(args.win_test_secs * params['sampling frequency']), 
+                                            round(args.overlap_secs * params['sampling frequency']))
+        eeg_epochs1 = BCIw.epoching(eeg_data1, round(args.win_test_secs * params['sampling frequency']),    
+                                            round(args.overlap_secs * params['sampling frequency']))
 
         # Compute features
 
@@ -127,14 +127,14 @@ if __name__ == "__main__":
             myo_client.vibrate('short')
 
 
-        if (training_acc > 0.4 & training_acc < args.training_accuracty_threshold):
+        if (training_acc > 0.4 and training_acc < args.training_accuracy_threshold):
             
             # Send vibration 
             myo_client.vibrate('short') 
             myo_client.vibrate('short')
 
 
-        if (training_acc >= args.training_accuracty_threshold):
+        if (training_acc >= args.training_accuracy_threshold):
             
             # Send vibration 
             myo_client.vibrate('short')
