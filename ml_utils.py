@@ -14,7 +14,7 @@ def normalize(data):
 	mean_ = np.mean(data, axis=0)
 	std_ = np.std(data, axis=0)
 
-	return (data-mean)/std
+	return (data-mean_)/std_
 
 def prepare_data(class_0, class_1):
 	"""
@@ -33,7 +33,7 @@ def prepare_data(class_0, class_1):
 	n = n_0 + n_1
 	
 	y_0 = np.zeros(n_0)
-	y_1 = np.zeros(n_1)
+	y_1 = np.ones(n_1)
 	
 	y = np.hstack([y_0, y_1])
 	x_class01 = np.vstack(class_0, class_1)
