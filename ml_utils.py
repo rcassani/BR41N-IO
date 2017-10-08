@@ -129,8 +129,8 @@ def predict_from_list(x, models_list):
 
 	predictions = []
 
-	for model in models_lisr:
-		predictions.append(model.predic(x))
+	for model in models_list:
+		predictions.append(model.predict(x))
 
 	return predictions
 
@@ -146,8 +146,8 @@ def test_from_list(x, y, models_list):
 
 	accuracies = []
 
-	for model in models_lisr:
-		y_pred = model.predic(x)
+	for model in models_list:
+		y_pred = model.predict(x)
 		accuracies.append(accuracy_score(y, y_pred))
 
 	return accuracies
